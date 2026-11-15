@@ -301,6 +301,26 @@ button{font-family:inherit}
 .read-block{margin-top:12px}
 .read-block h4{font-size:10px;letter-spacing:.24em;color:var(--gold);margin:0 0 9px}
 .read-block p{font-size:12px;line-height:1.95;color:#b8b3a2;margin:0}
+.plain-block{margin:0 0 18px;padding:22px 24px;border:1px solid rgba(201,168,106,.24);background:radial-gradient(120% 120% at 100% 0,rgba(201,168,106,.07),transparent 45%),linear-gradient(160deg,#101612,#0b0f0c);position:relative;overflow:hidden}
+.plain-block::after{content:"";position:absolute;right:-40px;bottom:-70px;width:180px;height:180px;border:1px solid rgba(201,168,106,.1);border-radius:50%;pointer-events:none}
+.plain-kicker{font-size:10px;letter-spacing:.26em;color:var(--gold)}
+.plain-title{font-family:var(--kai);font-size:26px;font-weight:500;margin:6px 0 0;color:var(--paper);letter-spacing:.04em}
+.plain-lead{font-size:15px;line-height:2.05;color:#d0c9b6;margin:10px 0 0}
+.plain-sub{font-size:10px;letter-spacing:.22em;color:var(--gold);margin:20px 0 8px;font-weight:400}
+.plain-muts{list-style:none;margin:8px 0 0;padding:0;display:grid;gap:7px}
+.plain-muts li{font-size:13.5px;line-height:1.95;color:#c5beab;padding:7px 0 7px 13px;border-left:2px solid rgba(201,168,106,.28)}
+.plain-muts b{color:var(--gold);font-weight:600}
+.plain-advice{font-size:13px;line-height:1.95;color:#d8cfb9;margin:14px 0 0;padding:11px 13px;background:rgba(201,168,106,.06);border:1px solid rgba(201,168,106,.18)}
+.plain-advice b{color:var(--gold);font-weight:500;margin-right:7px;letter-spacing:.08em}
+.plain-note{font-size:11px;line-height:1.9;color:var(--muted);margin:14px 0 0;padding-top:12px;border-top:1px dashed rgba(201,168,106,.16)}
+.glossary{margin-top:12px;border:1px solid rgba(201,168,106,.14);background:#0b100d}
+.glossary summary{cursor:pointer;padding:12px 15px;font-size:10px;letter-spacing:.2em;color:var(--gold);list-style:none}
+.glossary summary::-webkit-details-marker{display:none}
+.glossary summary::after{content:"＋";float:right;color:var(--muted)}
+.glossary[open] summary::after{content:"－"}
+.glossary dl{margin:0;padding:0 15px 14px;display:grid;grid-template-columns:82px 1fr;gap:7px 12px}
+.glossary dt{font-size:11px;color:var(--gold);letter-spacing:.08em}
+.glossary dd{margin:0;font-size:11.5px;line-height:1.75;color:#9e9a8c}
 .patterns{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
 .pattern{border:1px solid rgba(201,168,106,.3);padding:4px 8px;font-size:10px;color:var(--gold);letter-spacing:.06em}
 .palace-list{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
@@ -394,6 +414,12 @@ button{font-family:inherit}
   .mut-grid{grid-template-columns:1fr 1fr}
   .ding-grid{grid-template-columns:1fr}
   .read-hero{grid-template-columns:1fr}
+  .plain-block{padding:16px 15px}
+  .plain-title{font-size:22px}
+  .plain-lead{font-size:13.5px}
+  .plain-muts li{font-size:12.5px}
+  .plain-advice{font-size:12.5px}
+  .glossary dl{grid-template-columns:68px 1fr}
   .tabs{gap:2px}
   .tab{padding:10px 9px;font-size:10.5px}
   .detail{padding:16px}
@@ -764,7 +790,7 @@ button{font-family:inherit}
   };
 
   const CITIES = [
-    [116.4,"北京"],[121.47,"上海"],[113.26,"广州"],[114.06,"深圳"],[104.07,"成都"],
+    [116.4,"北京"],[121.47,"上海"],[113.26,"广州"],[113.75,"东莞"],[114.06,"深圳"],[104.07,"成都"],
     [120.15,"杭州"],[114.3,"武汉"],[108.94,"西安"],[106.55,"重庆"],[87.62,"乌鲁木齐"]
   ];
 
@@ -1205,6 +1231,113 @@ button{font-family:inherit}
     return out;
   }
 
+  const JI_PLAIN = {
+    "太阳":"常觉得自己的付出没被看见，容易为名声、长辈或家人耗神；先把期待说清楚，别硬撑。",
+    "太阴":"情绪和安全感容易反复，夜里想得多；给自己稳定的作息，以及一个可掌控的小空间。",
+    "廉贞":"对关系与边界很敏感，容易在「想靠近」和「怕受伤」之间拉扯；先分清原则与情绪。",
+    "武曲":"对钱和结果容易绷得太紧，遇事先算得失；留一点弹性，不必事事硬碰。",
+    "天机":"脑子停不下来，容易把还没发生的事推演成压力；先做眼前一件，再想下一步。",
+    "巨门":"对误解和口舌敏感，容易反复解释；重要的话慢一点说，不必让所有人都懂。",
+    "天同":"对舒服与和谐有执念，冲突时容易退；该表达的时候要开口。",
+    "天梁":"容易替别人扛责任，讲道理讲到自己累；先照顾好自己，再照顾别人。",
+    "七杀":"冲劲大，压力上来时容易硬碰；给自己留缓冲，不必每一仗都打赢。",
+    "破军":"旧的不去新的不来，容易主动推翻；重大决定先睡一觉，再动手。",
+    "贪狼":"兴趣多、欲望多，容易分心；一次只抓一件，反而走得更远。",
+    "紫微":"在意体面与被尊重，容易一个人扛；适当求助，不会掉价。",
+    "天府":"求稳，容易把资源攥得太紧；该花的花，该放的放。",
+    "天相":"在意规则与体面，容易为顾全大局委屈自己；先问自己要什么。"
+  };
+
+  function mutagensOf(a){
+    const out = [];
+    a.palaces.forEach(p => {
+      [...p.majorStars, ...p.minorStars].forEach(s => {
+        if (s.mutagen) out.push({m:s.mutagen, star:s.name, palace:p});
+      });
+    });
+    return out;
+  }
+
+  function plainBase(a){
+    const ming = a.palace("命宫");
+    const body = a.palaces.find(p => p.isBodyPalace);
+    const majors = ming.majorStars;
+    let lead;
+    if (majors.length){
+      const names = majors.map(s => s.name).join("、");
+      const traits = majors.map(s => STAR[s.name] ? STAR[s.name].trait : "").filter(Boolean).join("；");
+      lead = `命宫在${ming.earthlyBranch}，主星是${names}。你默认的反应方式，是${traits}。`;
+    } else {
+      const opp = oppositePalace(a, ming);
+      const names = opp.majorStars.map(s => s.name).join("、") || "空宫";
+      lead = `命宫没有主星，借对宫 ${names} 来用。你比较受环境影响，适应力强，但方向感要自己慢慢定。`;
+    }
+    const domain = PALACE[body.name] ? PALACE[body.name].domain : body.name;
+    const jutext = JU[a.fiveElementsClass] || "";
+    return `${lead} 身宫落在${body.name}，成年后精力更容易放到「${domain}」上。五行局是${a.fiveElementsClass}：${jutext}`;
+  }
+
+  function plainMutList(a){
+    const muts = mutagensOf(a);
+    const order = ["禄","权","科","忌"];
+    const items = [];
+    order.forEach(m => {
+      const list = muts.filter(x => x.m === m);
+      if (!list.length){
+        items.push(`<li><b>化${m}</b>：这张盘没有明显的化${m}，这一块不是主轴。</li>`);
+        return;
+      }
+      list.forEach(it => {
+        const d = STAR[it.star] || {trait:""};
+        const pal = it.palace.name;
+        const domain = PALACE[pal] ? PALACE[pal].domain : pal;
+        let text;
+        if (m === "禄") text = `${it.star}的${d.trait}是你的资源入口。机会与帮助，常常从「${pal}」这一块来：${domain}。`;
+        else if (m === "权") text = `你在「${pal}」上容易想掌控、也容易扛责任。${it.star}的${d.trait}，用在这里是推力，用过头就是压力。`;
+        else if (m === "科") text = `名声、贵人与文书运，容易从「${pal}」来。把${it.star}的${d.trait}做成看得见的成果，比只说更有效。`;
+        else text = JI_PLAIN[it.star] || `你在「${pal}」上最容易反复琢磨、觉得不够。先承认这个缺口，再给自己留余地，不必硬扛。`;
+        items.push(`<li><b>${it.star}化${m}</b> · 落${pal}：${text}</li>`);
+      });
+    });
+    return `<ul class="plain-muts">${items.join("")}</ul>`;
+  }
+
+  const JI_ADVICE = {
+    "命宫":"你对自己要求偏高，累的时候先睡一觉；不必把所有事都扛完。",
+    "兄弟":"同辈与朋友之间容易有比较心；把注意力收回自己的节奏。",
+    "夫妻":"亲密关系里容易反复确认；把需求直接说出来，比猜更省力。",
+    "子女":"对晚辈或作品容易操心；先分清哪些是他们的课题。",
+    "财帛":"钱和安全感容易绑在一起；先做预算，再谈机会。",
+    "疾厄":"身体是你最先要照顾的底盘；规律作息比硬撑有用。",
+    "迁移":"在外容易紧绷；换环境时给自己留缓冲。",
+    "仆役":"团队与朋友里容易付出过头；先看清边界。",
+    "官禄":"工作上容易扛太多；把标准说清楚，别一个人硬推。",
+    "田宅":"家与住处是你的能量来源；先把小环境收拾顺。",
+    "福德":"脑子里戏多，容易内耗；给自己一点无用但开心的时间。",
+    "父母":"与长辈之间容易有隔阂；重要的话慢慢说。"
+  };
+
+  function plainAdvice(a){
+    const ji = mutagensOf(a).find(x => x.m === "忌");
+    if (ji && JI_ADVICE[ji.palace.name]) return JI_ADVICE[ji.palace.name];
+    const body = a.palaces.find(p => p.isBodyPalace);
+    return body.name === "命宫"
+      ? "你主观强，方向多由自己定；但别把独行当成唯一选项。"
+      : `成年后精力多在${PALACE[body.name] ? PALACE[body.name].short : body.name}上；记得给生活留别的支点。`;
+  }
+
+  function plainBlock(a){
+    return `<div class="plain-block">
+      <div class="plain-kicker">白话解盘 · 先看这里</div>
+      <h3 class="plain-title">这张盘大概在说什么</h3>
+      <p class="plain-lead">${plainBase(a)}</p>
+      <h4 class="plain-sub">生年四化，落在哪</h4>
+      ${plainMutList(a)}
+      <p class="plain-advice"><b>给你的提醒</b>：${plainAdvice(a)}</p>
+      <p class="plain-note">四化是这张盘里最容易「动起来」的部分：禄是机会，权是掌控，科是名声，忌是反复琢磨的缺口。它们落在哪一宫，哪一块人生就更容易被牵动。</p>
+    </div>`;
+  }
+
   function renderRead(){
     const a = state.chart;
     const ming = a.palace("命宫");
@@ -1214,6 +1347,7 @@ button{font-family:inherit}
 
     // overview
     $("#panel-overview").innerHTML = `
+      ${plainBlock(a)}
       <div class="read-hero">
         <div class="card">
           <div class="kicker">命宫 · ${esc(ming.heavenlyStem)}${esc(ming.earthlyBranch)}</div>
@@ -1239,6 +1373,16 @@ button{font-family:inherit}
         <div class="patterns">${patterns.length ? patterns.map(p=>`<span class="pattern">${esc(p[0])}</span>`).join("") : '<span class="pattern">暂无显著组合</span>'}</div>
         <p style="margin-top:8px">${patterns.map(p=>`<b>${esc(p[0])}</b>：${esc(p[1])}`).join("<br>") || "格局只是倾向，不等于断语。"}</p>
       </div>
+      <details class="glossary">
+        <summary>术语小抄 · 看不懂时点开</summary>
+        <dl>
+          <dt>命宫</dt><dd>性格与人生的主轴，也是你默认的反应方式。</dd>
+          <dt>身宫</dt><dd>成年后精力更容易投进去的领域，和命宫一起看。</dd>
+          <dt>三方四正</dt><dd>命宫、对宫、财帛宫、官禄宫，四个位置互相参照。</dd>
+          <dt>四化</dt><dd>禄是机会，权是掌控，科是名声，忌是反复琢磨的缺口。</dd>
+          <dt>大限 / 流年</dt><dd>大限是十年一段的主题，流年是某一年的触发点，只作阶段提示。</dd>
+        </dl>
+      </details>
       <p class="disclaimer">以上为传统命理框架下的性格与结构解读，不是事件预言。真正定盘仍需结合你自己的经历。</p>`;
 
     // palaces
