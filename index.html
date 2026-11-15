@@ -6,6 +6,11 @@
 <meta name="theme-color" content="#080a09">
 <title>紫微斗數 · 定盘与解盘</title>
 <meta name="description" content="紫微斗数排盘、真太阳时校正与定盘校验。十二宫命盘、十四主星、四化、大限流年，道家风格界面。">
+<meta property="og:title" content="紫微斗數 · 定盘与解盘">
+<meta property="og:description" content="十二宫命盘 · 十三时辰定盘 · 四化与大限流年。道家水墨与朱砂的单页排盘工具。">
+<meta property="og:image" content="https://nikon1koni.github.io/ziwei-doushu/assets/preview.jpg">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23b8452f'/%3E%3Ctext x='32' y='45' font-size='38' text-anchor='middle' fill='%23f7ead2'%3E%E7%B4%AB%3C/text%3E%3C/svg%3E">
 <style>
 :root{
   --ink:#080a09; --ink2:#0d1210; --ink3:#121814;
@@ -384,7 +389,7 @@ button{font-family:inherit}
   .chart-meta{gap:10px;padding-bottom:10px}
   .meta-item{font-size:9.5px}
   .summary-grid{grid-template-columns:1fr 1fr}
-  #method .summary-grid{grid-template-columns:1fr}
+  #method .summary-grid{grid-template-columns:1fr!important}
   .palace-list{grid-template-columns:1fr}
   .mut-grid{grid-template-columns:1fr 1fr}
   .ding-grid{grid-template-columns:1fr}
@@ -533,7 +538,7 @@ button{font-family:inherit}
           </div>
 
           <div class="field full">
-            <label class="check"><input type="checkbox" id="trueSolar" checked> 启用真太阳时校正（经度 + 均时差）</label>
+            <label class="check" id="trueSolarLabel"><input type="checkbox" id="trueSolar" checked> 启用真太阳时校正（经度 + 均时差）</label>
             <label class="check hidden" id="leapWrap"><input type="checkbox" id="leapMonth"> 农历闰月</label>
           </div>
         </div>
@@ -835,6 +840,7 @@ button{font-family:inherit}
     $("#solarField").classList.toggle("hidden", cal !== "solar");
     $("#lunarField").classList.toggle("hidden", cal !== "lunar");
     $("#leapWrap").classList.toggle("hidden", cal !== "lunar");
+    $("#trueSolarLabel").classList.toggle("hidden", cal === "lunar");
   }
 
   function setGender(g){
@@ -1063,6 +1069,7 @@ button{font-family:inherit}
       <p style="color:#8f8a79;font-size:10px">小限：${p.ages.join("、")} 岁</p>`;
     $("#palaceDetail").classList.add("show");
     $("#detailClose").addEventListener("click", () => $("#palaceDetail").classList.remove("show"));
+    requestAnimationFrame(() => $("#palaceDetail").scrollIntoView({behavior:"smooth", block:"nearest"}));
   }
 
   function verifyText(a, ming, body){
